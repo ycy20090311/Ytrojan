@@ -43,4 +43,6 @@ class Main:
         ))
         print("exit\t%s" % i18n.STRINGS[self.LANGUAGE]["str_help_for_exit"])
         print("\n\n%s" % i18n.STRINGS[self.LANGUAGE]["str_mode_description"])
+        print(i18n.STRINGS[self.LANGUAGE]['str_i18n_info'] % (i18n.STRINGS[self.LANGUAGE]['str_lang_name'], i18n.STRINGS[self.LANGUAGE]['str_translate_author_name']))
+        print(i18n.STRINGS[self.LANGUAGE]['str_third_party_warn'])
         print()
