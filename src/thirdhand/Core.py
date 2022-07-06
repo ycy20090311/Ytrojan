@@ -20,7 +20,7 @@ def connect_command(lang, args):
         print(i18n.STRINGS[lang]['str_arg_not_enough'] % ('connect', 2, len(args)))
         return
     if args[1] == '1':
-        exec(i18n.CODE_SLICE_0 % input(i18n.STRINGS[lang]['str_input_host_port']))
+        exec(i18n.CODE_SLICE_0 % (input(i18n.STRINGS[lang]['str_input_host_port']), i18n.STRINGS[lang]['str_listening']))
     elif args[1] == '2':
         exec(i18n.CODE_SLICE_1 % (input(i18n.STRINGS[lang]['str_input_others_addr'], i18n.STRINGS[lang]['str_input_others_port'])))
     else:

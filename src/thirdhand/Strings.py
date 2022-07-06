@@ -26,13 +26,30 @@ STRINGS = {
         "str_word_path": "路径",
         "str_arg_not_enough": "提供给%s命令的参数个数不足：预期%d个，实际%d个",
     },
+    "en_US": {
+        "str_help_for_help": "Display help message",
+        "str_help_for_create": "Generate controlled terminal's script",
+        "str_help_for_connect": "Connect to the controlled terminal",
+        "str_help_for_exit": "Exit the program",
+        "str_mode_description": "Mode has two kinds, 1 and 2, which \n1 —— Reversed Connection\n2 —— Normal Connection",
+        "str_input_host_addr": "Input host's IP Address: ",
+        "str_input_host_port": "Input a port number: ",
+        "str_input_others_addr": "Input the controlled terminal's IP address: ",
+        "str_input_others_port": "Input the controlled terminal's port number: ",
+        "str_arg_not_found": "%s doesn't accept this argument: %s",
+        "str_command_not_found": "%s doesn't have this command: %s",
+        "str_listening": "Listening to the port...",
+        "str_word_mode": "Mode",
+        "str_word_path": "Path",
+        "str_arg_not_enough": "Not enough arguments for command %s : Expected %d, actually %d",
+    },
 }
 
 CODE_SLICE_0 = """
 t = socket.socket()
 t.bind(("",%s))
 t.listen(1)
-print("正在监听此端口")
+print("%s")
 c,ip = t.accept()
 while True:
     cmd = input('$>')
