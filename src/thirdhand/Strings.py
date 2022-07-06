@@ -10,6 +10,10 @@ LOGO_STR = """
 
 STRINGS = {
     "zh_CN": {
+        "str_lang_name": "简体中文",
+        "str_third_party_warn": "",
+        "str_translate_author_name": "孤独的帅哥杨",
+        "str_i18n_info": "%s翻译%s由提供。",
         "str_help_for_help": "显示帮助信息",
         "str_help_for_create": "生成被控端脚本",
         "str_help_for_connect": "连接被控端脚本",
@@ -27,6 +31,10 @@ STRINGS = {
         "str_arg_not_enough": "提供给%s命令的参数个数不足：预期%d个，实际%d个",
     },
     "en_US": {
+        "str_lang_name": "English",
+        "str_third_party_warn": "",
+        "str_translate_author_name": "27Onion",
+        "str_i18n_info": "The %s translation is made by %s.",
         "str_help_for_help": "Display help message",
         "str_help_for_create": "Generate controlled terminal's script",
         "str_help_for_connect": "Connect to the controlled terminal",
@@ -44,6 +52,10 @@ STRINGS = {
         "str_arg_not_enough": "Not enough arguments for command %s : Expected %d, actually %d",
     },
     "ja_JP": {
+        "str_lang_name": "日本語",
+        "str_third_party_warn": "",
+        "str_i18n_info": "%sの翻訳は%sが提供したものです。",
+        "str_translate_author_name": "27Onion",
         "str_help_for_help": "ヘルプを出力します",
         "str_help_for_create": "制御された一端のスクリプトを作成します",
         "str_help_for_connect": "制御された一端を接続します",
