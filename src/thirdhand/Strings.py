@@ -13,7 +13,7 @@ STRINGS = {
         "str_lang_name": "简体中文",
         "str_third_party_warn": "",
         "str_translate_author_name": "孤独的帅哥杨",
-        "str_i18n_info": "%s翻译%s由提供。",
+        "str_i18n_info": "%s翻译由%s提供。",
         "str_help_for_help": "显示帮助信息",
         "str_help_for_create": "生成被控端脚本",
         "str_help_for_connect": "连接被控端脚本",
