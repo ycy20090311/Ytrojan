@@ -1,9 +1,10 @@
 import thirdhand.Strings as i18n
 from thirdhand.Strings import gp
 import thirdhand.Core as core
+import thirdhand.Init as startup
 class Main:
     
-    LANGUAGE = "zh_CN"
+    LANGUAGE = startup.getLanguage()
     
     def run(self):
         # Output the logo first.

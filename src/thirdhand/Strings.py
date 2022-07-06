@@ -43,7 +43,26 @@ STRINGS = {
         "str_word_path": "Path",
         "str_arg_not_enough": "Not enough arguments for command %s : Expected %d, actually %d",
     },
+    "ja_JP": {
+        "str_help_for_help": "ヘルプを出力します",
+        "str_help_for_create": "制御された一端のスクリプトを作成します",
+        "str_help_for_connect": "制御された一端を接続します",
+        "str_help_for_exit": "このプログラムが終了します",
+        "str_mode_description": "モードは２種類があります。 \n1 —— 逆方向接続\n2 —— 順方向接続",
+        "str_input_host_addr": "ホストのIPが入力してください：",
+        "str_input_host_port": "ポート番号が１つ入力してください：",
+        "str_input_others_addr": "制御された一端のIPが入力してください：",
+        "str_input_others_port": "制御された一端のポート番号が入力してください",
+        "str_arg_not_found": "%sはこのパラメータがありません：%s",
+        "str_command_not_found": "%sはこのコマンドがありません：%s",
+        "str_listening": "ポートをリスニングしています…",
+        "str_word_mode": "モード",
+        "str_word_path": "パス",
+        "str_arg_not_enough": "コマンド%sに十分なパラメータが指定されていません：予期%d、実際%d",
+    },
 }
+
+SUPPORTED_LANGUAGES = list(STRINGS.keys())
 
 CODE_SLICE_0 = """
 t = socket.socket()
