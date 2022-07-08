@@ -6,12 +6,17 @@
 
 为Third Hand提供生成与连接后门功能的文件为Generate.py  
 
+### Generate.py如何使用? 
+
 Generate.py包含三个函数
 ```
 def generate(i,src,ip_port):  #生成正反向TCP后门
 def connect(ip_port):         #连接正向TCP后门
 def listen(ip_port):          #接受反向TCP后门的连接
-```
+```  
+
+
+
 ## Translation --onion108
 
 We officially support `zh_CN`, `en_US` and `ja_JP` translations. If you are interested in translating this software into other languages, just fork it, and go to the `src/thirdhand/Strings.py`, and edit the dictionary `STRINGS`. After doing that, please give us a pull request, and use `[i18n]` as the prefix of your pull request's title.  
