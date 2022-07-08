@@ -13,7 +13,7 @@ def generate(i,src,ip_port):  #生成正反向TCP后门
 def connect(ip_port):         #连接正向TCP后门
 def listen(ip_port):          #接受反向TCP后门的连接
 ```    
-
+generate()的使用
 ```
 def generate(i,src,ip_port):  #生成正反向TCP后门
 '''
