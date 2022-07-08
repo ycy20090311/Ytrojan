@@ -2,8 +2,10 @@
 
 ## 生成与连接后门 --ycy20090311
 
-抱歉 由于本人英语能力较差，不得不用中文写.md 请谅解
-为Third Hand提供生成与连接后门功能的文件为Generate.py 
+抱歉 由于本人英语能力较差，不得不用中文写.md 请谅解  
+
+为Third Hand提供生成与连接后门功能的文件为Generate.py  
+
 Generate.py包含三个函数
 ```
 def generate(i,src,ip_port):  #生成正反向TCP后门
