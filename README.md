@@ -4,9 +4,7 @@
 
 抱歉 由于本人英语能力较差，不得不用中文写.md 请谅解  
 
-为Third Hand提供生成与连接后门功能的文件为Generate.py  
-
-### Generate.py如何使用? 
+#### Generate.py如何使用? 
 
 Generate.py包含三个函数
 ```
@@ -14,8 +12,6 @@ def generate(i,src,ip_port):  #生成正反向TCP后门
 def connect(ip_port):         #连接正向TCP后门
 def listen(ip_port):          #接受反向TCP后门的连接
 ```  
-
-
 
 ## Translation --onion108
 
