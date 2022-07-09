@@ -14,11 +14,11 @@ if "__main__" == __name__:
     while True:
         cmd = input("Third-Hand $>").split()
         if cmd[0] == "generate":
-          Generate.generate(int(cmd[1]),cmd[2],(cmd[3],int(cmd[4])))
+          Generate.generate(cmd[1],cmd[2],cmd[3],cmd[4])
         elif cmd[0] == "connect":
-          Generate.connect((cmd[1],int(cmd[2])))
+          Generate.connect(cmd[1],cmd[2])
         elif cmd[0] == "listen":
-          Generate.listen((cmd[1],int(cmd[2])))
+          Generate.listen(cmd[1],cmd[2])
         elif cmd[0] == "exit":
           exit()
         else:
