@@ -1,59 +1,55 @@
-# Third Hand
+# Third-Hand
 
-## 生成与连接后门 --ycy20090311
+## 如何使用Third-Hand  
 
-抱歉 由于本人英语能力较差，不得不用中文写.md 请谅解  
+用Python 3.10或以上版本的解释器运行Third-Hand.py  
 
-### Generate.py如何使用? 
-
-Generate.py包含三个函数
+运行结果
 ```
-def generate(i,src,ip_port):  #生成正反向TCP后门
-def connect(ip_port):         #连接正向TCP后门
-def listen(ip_port):          #接受反向TCP后门的连接
-```    
-generate()的使用
-```
-def generate(i,src,ip_port):  #生成正反向TCP后门
-1.当参数i为0 生成的后门脚本为反向TCP
-2.当参数i为1 生成的后门脚本为正向TCP
-3.参数src为生成脚本路径 例如"/home/hack.py"
-4.参数ip_port为一个元组 它是这样的("ip",port)
-  当参数i为0 ip_port为本机的ip与端口
-  当参数i为1 ip_port为目标的ip与端口
+     _____ _     _         _   _   _                 _ 
+    |_   _| |__ (_)_ __ __| | | | | | __ _ _ __   __| |
+      | | | '_ \| | '__/ _` | | |_| |/ _` | '_ \ / _` |
+      | | | | | | | | | (_| | |  _  | (_| | | | | (_| |
+      |_| |_| |_|_|_|  \__,_| |_| |_|\__,_|_| |_|\__,_|
+                                                    
+                                            V 0.1
+    
+Third-Hand $>
 ```  
-connect()的使用
-```
-def connect(ip_port):  #连接正向TCP后门
-1.参数ip_port为一个元组 它是这样的("ip",port)
-2.参数ip_port的值为目标
-```
-listen()的使用
-```
-def listen(ip_port):   #接受反向TCP后门的连接
-1.参数ip_port为一个元组 它是这样的("ip",port)
-2.参数ip_port的值为本机
-```
-快速用Generate.py生成并连接后门
-```
->>> import Generate
->>> Generate.generate(0,"TCPshell.py",("127.0.0.1",4444))
->>> Generate.listen(("127.0.0.1",4444))
-正在监听4444端口
-$>shell pwd
-/home
-$>shell ls
-xxx.sh
-xxx.c
-xxx.py
-....
-$>
-```
-## Translation --onion108
 
-We officially support `zh_CN`, `en_US` and `ja_JP` translations. If you are interested in translating this software into other languages, just fork it, and go to the `src/thirdhand/Strings.py`, and edit the dictionary `STRINGS`. After doing that, please give us a pull request, and use `[i18n]` as the prefix of your pull request's title.  
-Please translate the following text as the content of `str_third_party_warn` when translating as a third-party translator:
+### 使用generate命令生成后门  
+
 ```
-This translation is offered by a third-party translator.
-The translation may be not 100% accurate.
+generate [选项] [路径] [ip] [port]
+
+1. [选项] 可选0和1
+   当选项的值为0时 生成的为反向后门
+   当选项的值为1时 生成的为正向后门
+2. [路径] 生成脚本的路径
+3. [ip] 本机或目标的ip
+   [port] 本机或目标的port
+   当选项的值为0时 ip与port为本机
+   当选项的值为1时 ip与port为目标
+```  
+
+### 使用connect命令连接正向后门  
+
 ```
+connect [ip] [port]
+
+1. [ip][port] 均为目标
+2. 要确保正向后门开启
+```  
+
+### 使用listen命令接受反向后门连接  
+
+```
+listen [ip] [port]
+
+1. [ip][port] 均为本机
+2. 
+```
+
+
+
+   
