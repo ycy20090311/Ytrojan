@@ -47,7 +47,7 @@ connect [ip] [port]
 listen [ip] [port]
 
 1. [ip][port] 均为本机
-2. 
+2. 要确保反向后门开启
 ```
 
 
