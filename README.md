@@ -93,7 +93,7 @@ $> py password = "smtp运营商提供给您的密码"
 ```
 ## Third-Hand的GUI版本  
 
-<del>由大佬heiheilq提供 尽情期待  </del>
+<del>由大佬heiheilq提供 尽情期待  </del><br>
 <del>别问为啥删（问就是懒</del>
 
 ## Third-Hand的语言支持  
