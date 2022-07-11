@@ -9,6 +9,7 @@ if "__main__" == __name__:
       |_| |_| |_|_|_|  \__,_| |_| |_|\__,_|_| |_|\__,_|
                                                     
                                             V 0.1
+          www.github.com/ycy20090311/third-hand
     """)
 
     while True:
