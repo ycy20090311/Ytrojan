@@ -92,9 +92,7 @@ $> py name = "您的邮箱"
 $> py password = "smtp运营商提供给您的密码" 
 ```
 
-## Ybuilder的翻译工作  
 
-由大佬onion108提供 尽情期待
 
 
    
