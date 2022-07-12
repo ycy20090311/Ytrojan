@@ -41,7 +41,7 @@ connect [ip] [port]
 2. 此命令要运行在被控端之后!
 ```  
 
-### 使用listen命令接受反向后门连接  
+### 使用listen命令接受反向木马连接  
 
 ```
 listen [ip] [port]
