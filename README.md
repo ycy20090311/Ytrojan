@@ -2,6 +2,10 @@
 
 Ytrojan 一个简易的木马生成工具
 
+## 选择语言/Select Your Language
+
+Zh-cn   En-us 
+
 ## 如何使用Ytrojan
 
 用Python 3.10或以上版本的解释器运行Main-Cmd.py
