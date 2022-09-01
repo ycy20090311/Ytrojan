@@ -36,3 +36,19 @@ generate [Option] [Path] [Ip] [Port]
     For example, if you want the controlled client to be able to execute shell and py statements, you can do this:
     parameters $>shell py
 ````
+
+### Use the "connect" command to connect to the forward host
+
+````
+connect [ip] [port]
+1. [ip][port] are all target
+2. This command should be run after the controlled client runs
+````
+
+### Use the "listen" command to connect to the reverse host
+
+````
+listen [ip] [port]
+1. [ip][port] are your computer
+2. This command should be run before the controlled client
+````
