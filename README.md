@@ -37,10 +37,10 @@ generate [选项] [路径] [ip] [port]
    当选项的值为1时 ip与port为被控端
 
 当弹出 parameters $> 意味这您需要提供您想要的被控端功能
-目前仅支持 shell,get,win,py
+目前仅支持 shell,getfile,pycmd
 
 例如您想要被控端可以执行shell和py语句 您可以这样操作
-parameters $>shell py
+parameters $>shell pycmd
 
 ```  
 
@@ -67,10 +67,9 @@ listen [ip] [port]
 在连接到目标后 可以通过以下命令操作(连接到目标或会输出"ip $>")  
 
 ```
-1. shell [命令]     #执行shell
-2. get [文件路径]    #获取文件
-3. win             #获取屏幕截图
-4. py [语句]        #执行python语句
+1. shell [命令]         #执行shell
+2. getfile [文件路径]    #获取文件
+3. pycmd [语句]         #执行python语句
 ```  
 
 例如
@@ -79,32 +78,27 @@ listen [ip] [port]
    shell id     #执行id
    shell ls     #执行ls
 
-2. get a.txt    #获取a.txt
-   get /a.jpg   #获取根目录下的a.jpg  
+2. getfile a.txt    #获取a.txt
+   getfile /a.jpg   #获取根目录下的a.jpg  
 
-3. win          #获取屏幕截图
-
-4. py print('hello world')    #在目标上输出hello world
-   py import os;print(os.name)#获取目标操作系统信息
+3. pycmd print('hello world')    #在目标上输出hello world
+   pycmd import os;print(os.name)#获取目标操作系统信息
 ```  
 
-在这其中请注意shell和get及win命令!!!
+在这其中请注意shell和getfile命令!!!
 
 shell命令是非交互式shell 您无法执行vim sudo 这样的命令!!!  
 
-get和win使用smtp传输文件 您在使用两者时要先如下操作!!!  
+getfile使用smtp传输文件 您在使用时要先如下操作!!!  
 
 ```
-$> py host = "smtp服务器域名" #例如163的smtp.163.com
-命令执行成功
-$> py port = "smtp服务所在端口" #一般是25端口
-命令执行成功
-$> py username = "您的邮箱"
-命令执行成功
-$> py password = "smtp运营商提供给您的密码" 
+$> pycmd host = "smtp服务器域名" #例如163的smtp.163.com
+YES
+$> pycmd port = "smtp服务所在端口" #一般是25端口
+YES
+$> pycmd username = "您的邮箱"
+YES
+$> pycmd password = "smtp运营商提供给您的密码" 
+YES
+$>....
 ```
-
-
-
-
-   
