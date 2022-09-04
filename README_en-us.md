@@ -1,5 +1,8 @@
 # Ytrojan
 
+## This version is out of date
+## Please wait for the latest translation
+
 ## Select Your Language
 
 Zh-cn   En-us
