@@ -37,7 +37,7 @@ generate [Option] [Path] [Ip] [Port]
     When parameters $> appears, it means that you need to select the function of the controlled client you want
     Currently supported functions are: shell, get, win, py
     For example, if you want the controlled client to be able to execute shell and py statements, you can do this:
-    parameters $>shell py
+    parameters $>shell pycmd
 ````
 
 ### Use the "connect" command to connect to the forward host
