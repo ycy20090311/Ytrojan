@@ -1,8 +1,5 @@
 # Ytrojan
 
-## This version is out of date
-## Please wait for the latest translation
-
 ## Select Your Language
 
 Zh-cn   En-us
@@ -35,7 +32,7 @@ generate [Option] [Path] [Ip] [Port]
     When "option" is 0, ip and port are your computer's
     When "option" is 1, ip and port are those of the controlled client
     When parameters $> appears, it means that you need to select the function of the controlled client you want
-    Currently supported functions are: shell, get, win, py
+    Currently supported functions are: shell, getfile, pycmd
     For example, if you want the controlled client to be able to execute shell and py statements, you can do this:
     parameters $>shell pycmd
 ````
