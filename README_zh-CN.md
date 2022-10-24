@@ -4,7 +4,7 @@ Ytrojan 一个简易的木马生成工具
 
 ## 选择语言/Select Your Language
 
-Zh-cn   En-us 
+   [English](/README.md)|简体中文
 
 ## 如何使用Ytrojan
 
