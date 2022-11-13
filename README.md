@@ -2,7 +2,7 @@
 
 ## Select Your Language
 
-Zh-cn   En-us
+   English | [简体中文](/README_zh-CN.md)
 
 ## How to use?
 
