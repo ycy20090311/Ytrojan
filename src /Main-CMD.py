@@ -1,3 +1,6 @@
+# github.com/ycy20090311
+# 2022.11.29
+
 import threading
 import ControlAPI
 
