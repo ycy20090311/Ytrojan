@@ -1,4 +1,5 @@
-# github.com/ycy20090311/Ytrojan
+# github.com/ycy20090311
+# 2022.11.29
 
 import base64
 import time,socket
