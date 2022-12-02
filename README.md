@@ -26,21 +26,22 @@ Ytrojan $>
 ### 使用generate命令生成被控端  
 
 ```
-函数原型:ControlAPI.Generate(BotSrc,BotIp,BotPort)
-命令:generate [路径] [ip] [port]
-1.[路径] 为被控端脚本的路径
+函数原型:YtrojanAPI.Generate(BotSrc,ControlIp,ControlPort)
+命令:generate [BotSrc] [ControlIp] [ControlPort]
+
+1.[BotSrc] 被控端脚本的路径
   例如: D:\bot.py  /home/bot.py
-2.[ip] 为控制端ip
-3.[port] 为控制端端口
+2.[ControlIp]  控制端ip
+3.[ControlPort] 控制端端口
 ```  
 
 ### 使用listen命令打开控制端端口 等待反向木马被控端的连接  
 
 ```
-函数原型:ControlAPI.Listen(ControlPort)
-命令:listen [port]
+函数原型:YtrojanAPI.Listen(ControlPort)
+命令:listen [ControlPort]
 
-1. [ip]为控制端
+1. [ControlPort] 控制端端口
 ```  
 
 ### 如何操作目标  
@@ -60,6 +61,7 @@ Ytrojan $>
 
 ```
 使用run命令在被控端执行命令
+函数原型:YtrojanAPI.Run(BotSocket,Command)
 命令:run [被控端编号] [命令]
 [命令]
      1.shell [ShellCommand]
