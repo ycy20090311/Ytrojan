@@ -9,7 +9,7 @@ Ytrojan 一个基于TCP协议C/S架构的木马生成工具
 
 ## 如何使用Ytrojan
 
-用Python 3.10或以上版本的解释器运行Main-Cmd.py
+用Python 3.10或以上版本的解释器运行YtrojanCLI.py
 
 运行结果
 ```
