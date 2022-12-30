@@ -1,5 +1,5 @@
 # github.com/ycy20090311
-# 2022.12.28
+# 2023
 
 VersionInfo = """
 \033[31m __   ___             _             	\033[0m             
@@ -36,4 +36,3 @@ NotCommandError = """
 GoodbyeInfo = """
 \033[32m[+] GoodBye!         \033[0m
 """
-
