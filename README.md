@@ -1,90 +1,116 @@
-# Ytrojan
+## 什么是Ytrojan
 
-Ytrojan 一个基于TCP协议C/S架构的木马生成工具
-控制端作为服务端 被控端作为客户端
+Ytrojan是用Python编写的开源远控木马  
+支持分离加载恶意代码,执行Shell,上传与下载文件,远程执行本地Python脚本,截屏,调用摄像头拍照...  
 
-## 选择语言/Select Your Language
+如你所见,Ytrojan目前功能十分弱小。   
+我们还没有免杀模块,提权,跳板渗透内网...  
 
-   [English](/README_English.md)|简体中文
+Ytrojan目前更像是一个中二初中生编写的小玩意  
+所以在使用前请注意Ytrojan是否能满足您的需求
 
-## 如何使用Ytrojan
+    __   ___             _             ____  
+    \ \ / / |_ _ __ ___ (_) __ _ _ __ |___ \ 
+     \ V /| __| '__/ _ \| |/ _` | '_ \  __) |
+      | | | |_| | | (_) | | (_| | | | |/ __/ 
+      |_|  \__|_|  \___// |\__,_|_| |_|_____|
+                      |__/   
 
-用Python 3.10或以上版本的解释器运行YtrojanCLI.py
 
-运行结果
-```
- __   ___             _             
- \ \ / / |_ _ __ ___ (_) __ _ _ __  
-  \ V /| __| '__/ _ \| |/ _` | '_ \ 
-   | | | |_| | | (_) | | (_| | | | |
-   |_|  \__|_|  \___// |\__,_|_| |_|
-                   |__/                         
-                                      
-Ytrojan >
-```  
+## Ytrojan的依赖库     
 
-### 使用generate命令生成被控端  
+Ytrojan需要`opencv-python`和`Pillow`库  
+您可以直接`pip install -r requirements.txt`  
 
-```
-函数原型:YtrojanAPI.Generate(FileSrc,ControlHost,ControlPort)
-命令:generate [FileSrc] [ControlHost] [ControlPort]
+## 怎么使用Ytrojan
 
-1.[FileSrc] 被控端脚本的路径
-  例如: D:\bot.py  /home/bot.py
-2.[ControlHost]  控制端IP
-3.[ControlPort] 控制端端口
-```  
+#### 1. generate命令   
 
-### 使用listen命令打开控制端端口 等待反向木马被控端的连接  
+`generate <host> <port> <path>`  
+`control.generate(host:str,port:str,path:str) -> None`   
+该命令用来生成bot端的恶意Python脚本,`host`,`port`均为control端地址,`path`为保存生成路径   
 
-```
-函数原型:YtrojanAPI.Listen(ControlHost,ControlPort)
-命令:listen [ControlHost] [ControlPort]
+#### 2. service命令     
 
-1. [ControlHost] 控制端IP
-2. [ControlPort] 控制端端口
-```  
+`service <host> <port>`      
+`control.serice(socket:socket.socket) -> None`   
+该命令用来启动处理bot连接的子线程,`host`,`port`均为control端地址  
 
-### 如何操作目标  
+#### 3. listbot命令  
 
-```
-使用listbot命令查看所有被控端
-命令:listbot
-输出:
-   0 Linux-5.15.0-56-generic-x86_64-with-glibc2.35 ycy0311 x86_64 127.0.0.1
+`listbot`  
+该命令用来输出目前连接至control的bot,输出编号和网络地址  
 
-左边的数字是被控端编号
-右边第1个是操作系统
-右边第2个是设备网络名称
-右边第3个是CPU架构
-右边第4个是被控端IP
-```  
+#### 4. sysinfo命令  
 
-```
-使用run命令在被控端执行命令
-函数原型:YtrojanAPI.Run(BotID,Command)
-命令:run [被控端ID] [命令]
-[命令]
-     1.shell [ShellCommand]
-      例如(在编号为0的被控端执行shell命令)
-         run 0 shell ls(在编号为0的被控端执行shell命令ls)
-         run 0 shell pwd(在编号为0的被控端执行shell命令pwd)
-     2.pycode [PythonCode]
-      例如(在编号为0的被控端执行python代码)
-         run 0 pycode import tkinter;w = tkinter.Tk();w.mainloop()
-         run 0 pycode print("hack you computer")
-     3.getfile [控制端储存路径] [被控端文件路径]
-      例如(在编号为0的被控端下载文件)
-         run 0 getfile D:\a.jpg /home/image.jpg (把被控端的/home/image.jpg下载至控制端D\a.jpg)
-         run 0 getfile D:\movie.mp4 /home/a.mp4 (把被控端的/home/a.mp4下载至控制端D\movie.mp4)
-     4.putfile [被控端储存路径] [控制端文件路径]
-      例如(在编号为0的被控端上传文件)
-         run 0 putfile /home/a.jpg D:\a.jpg (把控制端D:\a.jpg上传至被控端/home/a.jpg)
-         run 0 putfile /home/a.py D:\a.py (把控制端D:\a.py上传至被控端/home/a.py)
-     5.webcamsnap [控制端储存路径]
-      例如(调用编号为0的被控端摄像头拍照)
-         run 0 webcamsnap D:\webcamsnap.jpg (摄像头拍照被控端保存至控制端D:\webcamsnap.jpg)
-     6.screenshot [控制端储存路径]
-      例如(编号为0的被控端屏幕截图)
-         run 0 screenshot D:\screenshot.jpg (摄像头拍照被控端保存至控制端D:\screenshot.jpg)
-```
+`sysinfo <id>`   
+`control.sysinfo(socket:socket.socket) -> dict`    
+该命令用来输出bot的详细信息 包括操作系统,网络名称,硬件信息等  
+
+#### 5. shell命令  
+
+`shell <id> <command>`   
+`control.shell(socket:socket.socket,input:list[str],timeout:bool) -> tuple`    
+该命令用来在bot上执行一条shell命令     
+
+注意这里`control.shell`中`timeout`参数决定是否开启超时处理   
+在使用`shell`时会开启   
+
+#### 6. shell_nt命令   
+ 
+`shell_nt <id> <command>`   
+`control.shell(socket:socket.socket,input:list[str],timeout:bool) -> tuple:`  
+该命令同上 但不会开启超时处理   
+
+#### 7. script命令    
+
+`script <id> <path>`   
+`control.script(socket:socket.socket,local_path:str) -> tuple`   
+该命令用来在bot端执行本地Python脚本   
+
+#### 8. download命令 
+
+`download <id> <remote_path> <local_path>`   
+`control.download(socket:socket.socket,remote_path:str,local_path:str) -> bool`   
+该命令下载文件到本地,注意`remote_path`,`local_path`要指向一个文件
+
+#### 9. upload命令 
+
+`upload <id> <local_path> <remote_path>`   
+`control.upload(socket:socket.socket,local_path:str,remote_path:str) -> bool`     
+该命令上传文件到bot,注意`remote_path`,`local_path`要指向一个文件
+
+#### 10. screenshot命令
+
+`screenshot <id> <path>`   
+`screenshot(socket:socket.socket,local_path:str) -> bool`   
+该命令用来在bot截屏,保存至本地,`local_path`要指向一个文件
+
+#### 11. webcamlist命令  
+
+`webcamlist <id>`   
+`control.webcamlist(socket:socket.socket) -> tuple`   
+该命令获取bot可用摄像头列表 和长宽信息  
+
+#### 12. webcamsnap命令  
+
+`webcamsnap <id> <index> <path>`   
+`webcamsnap(socket:socket.socket,id:int,local_path:str) -> bool`   
+该命令调用bot对应编号的摄像头拍照 并保存到本地   
+
+#### 13. kill命令  
+
+`kill <id>`   
+`control.kill(id:int) -> None`  
+该命令用来关闭bot连接   
+
+#### 14. exit命令   
+
+`exit`   
+退出命令
+  
+
+## 写在最后  
+
+Ytrojan日后可能会停更很长一段时间,由于我已经初三,且成绩并不好.  
+在这期间,如果您有好的想法,可以提交Pr,我会很感谢您的 !
