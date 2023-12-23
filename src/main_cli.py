@@ -57,17 +57,16 @@ def main() -> None:
                     control.generate(command[1],command[2],command[3])
                     info(f"Scripts are generated to %s" % command[3])
                     
-                case "serice":
+                case "service":
                     _socket = socket.socket()
                     _socket.bind((command[1],int(command[2])))
                     _socket.listen()
-                    thread = threading.Thread(target=control.serice,args=(_socket,))
+                    thread = threading.Thread(target=control.service,args=(_socket,))
                     thread.daemon = True 
                     thread.start()
                     info("The listening service is enabled")
-                    info("Address %s %s" % (command[1],command[2]))
                     
-                case "listbot":
+                case "botlist":
                     if control.bot_list:
                         info("listing information")
                         for bot_socket in control.bot_list:
