@@ -39,7 +39,7 @@ Format: `service <host> <port>`
 API: `control.serice(socket:socket.socket) -> None`
 This command is used to start a child thread to handle bot connections. `host` and `port` are the addresses for the control side.
 
-#### 3. listbot command
+#### 3. botlist command
 
 Format: `botlist`
 This command is used to output the bots currently connected to the control, displaying bot ID and network address.
