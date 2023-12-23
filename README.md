@@ -44,7 +44,7 @@ API: `control.generate(host:str,port:str,path:str) -> None`
 API: `control.serice(socket:socket.socket) -> None`   
 该命令用来启动处理bot连接的子线程,`host`,`port`均为control端地址  
 
-#### 3. listbot命令  
+#### 3. botlist命令  
 
 格式:`botlist`  
 该命令用来输出目前连接至control的bot,输出bot编号和网络地址  
