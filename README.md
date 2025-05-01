@@ -5,6 +5,7 @@
 ## 什么是Ytrojan
 
 Ytrojan是用Python编写的开源远控木马     
+https://deepwiki.com/ycy20090311/Ytrojan
 
 1. 控制多台Bot  
 2. 远程加载恶意代码    
